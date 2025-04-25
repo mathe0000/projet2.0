@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collection - ShopTonMaillot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Barre de navigation */
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 0;
+        }
+
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2c3e50;
+            text-decoration: none;
+        }
+
+        .navbar-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .nav-link {
+            font-weight: 600;
+            color: #2c3e50;
+            transition: color 0.3s ease;
+            position: relative;
+            text-decoration: none;
+        }
+
+        .nav-link:hover {
+            color: #e74c3c;
+        }
+
+        .nav-link.active {
+            color: #e74c3c;
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #e74c3c;
+        }
+
+        .cart-icon {
+            position: relative;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            z-index: 1;
+            border-radius: 4px;
+            padding: 10px 0;
+        }
+
+        .dropdown-content a {
+            color: #2c3e50;
+            padding: 10px 16px;
+            display: block;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f5f5f5;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Contenu principal */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-container {
+            flex: 1;
+            width: 90%;
+            max-width: 1400px;
+            margin: 30px auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 2.2rem;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .product-count {
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        /* Filtres modernes */
+        .filters-container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .filters-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            cursor: pointer;
+        }
+
+        .filters-title {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filters-toggle {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .filters-toggle.collapsed {
+            transform: rotate(180deg);
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .reset-btn {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .apply-btn {
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .apply-btn:hover {
+            background-color: #1a252f;
+            transform: translateY(-2px);
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+            max-height: 500px;
+            overflow: hidden;
+            transition: max-height 0.5s ease, padding 0.5s ease;
+        }
+
+        .filters-grid.collapsed {
+            max-height: 0;
+            padding: 0;
+            margin: 0;
+        }
+
+        .filter-group {
+            margin-bottom: 0;
+        }
+
+        .filter-label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-label i {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .filter-option {
+            padding: 8px 15px;
+            background-color: #f8f9fa;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            border: 1px solid #e0e0e0;
+        }
+
+        .filter-option:hover {
+            background-color: #e9ecef;
+        }
+
+        .filter-option.active {
+            background-color: #2c3e50;
+            color: white;
+            border-color: #2c3e50;
+        }
+
+        /* Barre déroulante équipes/pays */
+        .team-country-select {
+            position: relative;
+            width: 100%;
+        }
+
+        .select-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            cursor: pointer;
+        }
+
+        .select-header.active {
+            border-color: #2c3e50;
+        }
+
+        .selected-items {
+            font-size: 0.9rem;
+            color: #2c3e50;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1;
+        }
+
+        .select-arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .select-arrow.active {
+            transform: rotate(180deg);
+        }
+
+        .select-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            max-height: 300px;
+            overflow-y: auto;
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 0 0 6px 6px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            display: none;
+        }
+
+        .select-dropdown.active {
+            display: block;
+        }
+
+        .select-search {
+            padding: 10px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .select-search input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+        }
+
+        .select-options {
+            padding: 5px 0;
+        }
+
+        .select-option {
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .select-option:hover {
+            background-color: #f8f9fa;
+        }
+
+        .select-option input {
+            margin-right: 10px;
+        }
+
+        .price-range-container {
+            padding: 10px 0;
+        }
+
+        .price-range {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            background: #e0e0e0;
+            border-radius: 3px;
+            outline: none;
+            margin: 15px 0;
+        }
+
+        .price-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: #2c3e50;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .price-range::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            background: #e74c3c;
+        }
+
+        .price-values {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        /* Grille de produits */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .product-card {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-card h3 {
+            font-size: 1.1rem;
+            color: #2c3e50;
+            margin: 0 0 10px 0;
+            font-weight: 600;
+        }
+
+        .product-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+
+        .product-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .btn-add-to-cart {
+            flex: 1;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-add-to-cart:hover {
+            background-color: #1a252f;
+        }
+
+        .btn-wishlist {
+            width: 40px;
+            height: 40px;
+            background-color: #f8f9fa;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-wishlist:hover {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: #e74c3c;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 50px;
+            gap: 10px;
+        }
+
+        .page-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page-btn:hover, .page-btn.active {
+            background-color: #2c3e50;
+            color: white;
+            border-color: #2c3e50;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .filters-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .filters-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .filter-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .apply-btn {
+                flex: 1;
+            }
+            
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Barre de navigation CORRIGÉE -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="Home.html" class="logo">ShopTonMaillot</a>
+            
+            <div class="navbar-links">
+                <a href="Home.html" class="nav-link">Accueil</a>
+                <a href="collection.html" class="nav-link active">Collection</a>
+                <a href="annonce.html" class="nav-link">Mettre une annonce</a>
+                <div class="dropdown">
+                    <a href="#" class="nav-link">Catégories <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="category.html?cat=football">Football</a>
+                        <a href="category.html?cat=basketball">Basketball</a>
+                        <a href="category.html?cat=rugby">Rugby</a>
+                        <a href="category.html?cat=autres">Autres sports</a>
+                    </div>
+                </div>
+                <a href="connexion.html" class="nav-link">Se connecter</a>
+                <a href="panier.html" class="nav-link cart-icon"><i class="fas fa-shopping-cart"></i> <span class="cart-count">0</span></a>
+                <a href="discussion.html" class="nav-link"><i class="fas fa-envelope"></i></a>
+            </div>
+            
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenu principal -->
+    <div class="main-container">
+        <div class="page-header">
+            <h1 class="page-title">Notre Collection</h1>
+            <div class="product-count">24 articles</div>
+        </div>
+        
+        <!-- Filtres modernes -->
+        <div class="filters-container">
+            <div class="filters-header" id="filters-header">
+                <h2 class="filters-title">
+                    <i class="fas fa-sliders-h"></i>
+                    Filtres avancés
+                </h2>
+                <button class="filters-toggle" id="filters-toggle">
+                    <i class="fas fa-chevron-up"></i>
+                </button>
+                <div class="filter-actions">
+                    <button class="reset-btn">
+                        <i class="fas fa-redo"></i>
+                        Réinitialiser
+                    </button>
+                    <button class="apply-btn">Appliquer les filtres</button>
+                </div>
+            </div>
+            
+            <div class="filters-grid" id="filters-grid">
+                <!-- Filtre Sport -->
+                <div class="filter-group">
+                    <label class="filter-label">
+                        <i class="fas fa-running"></i>
+                        Sport
+                    </label>
+                    <div class="filter-options">
+                        <div class="filter-option active">Football</div>
+                        <div class="filter-option">Basketball</div>
+                        <div class="filter-option">Rugby</div>
+                        <div class="filter-option">Autres</div>
+                    </div>
+                </div>
+                
+                <!-- Filtre Genre -->
+                <div class="filter-group">
+                    <label class="filter-label">
+                        <i class="fas fa-user"></i>
+                        Genre
+                    </label>
+                    <div class="filter-options">
+                        <div class="filter-option active">Homme</div>
+                        <div class="filter-option">Femme</div>
+                        <div class="filter-option">Enfant</div>
+                    </div>
+                </div>
+                
+                <!-- Filtre Équipe/Nation -->
+                <div class="filter-group">
+                    <label class="filter-label">
+                        <i class="fas fa-users"></i>
+                        Équipe/Nation
+                    </label>
+                    <div class="team-country-select">
+                        <div class="select-header" id="team-country-header">
+                            <div class="selected-items">Toutes les équipes/nations</div>
+                            <i class="fas fa-chevron-down select-arrow"></i>
+                        </div>
+                        <div class="select-dropdown" id="team-country-dropdown">
+                            <div class="select-search">
+                                <input type="text" placeholder="Rechercher..." id="team-country-search">
+                            </div>
+                            <div class="select-options" id="team-country-options">
+                                <div class="select-option">
+                                    <input type="checkbox" id="psg" value="PSG">
+                                    <label for="psg">PSG</label>
+                                </div>
+                                <div class="select-option">
+                                    <input type="checkbox" id="real-madrid" value="Real Madrid">
+                                    <label for="real-madrid">Real Madrid</label>
+                                </div>
+                                <div class="select-option">
+                                    <input type="checkbox" id="barcelone" value="FC Barcelone">
+                                    <label for="barcelone">FC Barcelone</label>
+                                </div>
+                                <div class="select-option">
+                                    <input type="checkbox" id="bayern" value="Bayern Munich">
+                                    <label for="bayern">Bayern Munich</label>
+                                </div>
+                                <div class="select-option">
+                                    <input type="checkbox" id="france" value="France">
+                                    <label for="france">France</label>
+                                </div>
+                                <div class="select-option">
+                                    <input type="checkbox" id="bresil" value="Brésil">
+                                    <label for="bresil">Brésil</label>
+                                </div>
+                                <div class="select-option">
+                                    <input type="checkbox" id="argentine" value="Argentine">
+                                    <label for="argentine">Argentine</label>
+                                </div>
+                                <div class="select-option">
+                                    <input type="checkbox" id="lakers" value="Lakers">
+                                    <label for="lakers">Lakers</label>
+                                </div>
+                                <div class="select-option">
+                                    <input type="checkbox" id="warriors" value="Warriors">
+                                    <label for="warriors">Warriors</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Filtre Type -->
+                <div class="filter-group">
+                    <label class="filter-label">
+                        <i class="fas fa-tag"></i>
+                        Type
+                    </label>
+                    <div class="filter-options">
+                        <div class="filter-option active">Domicile</div>
+                        <div class="filter-option">Extérieur</div>
+                        <div class="filter-option">Entraînement</div>
+                        <div class="filter-option">Autres</div>
+                    </div>
+                </div>
+                
+                <!-- Filtre Taille -->
+                <div class="filter-group">
+                    <label class="filter-label">
+                        <i class="fas fa-tshirt"></i>
+                        Taille
+                    </label>
+                    <div class="filter-options">
+                        <div class="filter-option">XS</div>
+                        <div class="filter-option active">S</div>
+                        <div class="filter-option active">M</div>
+                        <div class="filter-option">L</div>
+                        <div class="filter-option">XL</div>
+                    </div>
+                </div>
+                
+                <!-- Filtre Prix -->
+                <div class="filter-group">
+                    <label class="filter-label">
+                        <i class="fas fa-euro-sign"></i>
+                        Prix
+                    </label>
+                    <div class="price-range-container">
+                        <input type="range" min="0" max="200" value="200" class="price-range" id="price-range">
+                        <div class="price-values">
+                            <span>0 €</span>
+                            <span>200 €</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Grille de produits -->
+        <div class="products-grid">
+            <!-- Produit 1 -->
+            <div class="product-card">
+                <div class="product-badge">Nouveau</div>
+                <img src="https://via.placeholder.com/300x300?text=Maillot+PSG" alt="Maillot PSG">
+                <div class="product-info">
+                    <h3>Maillot PSG Domicile 2023</h3>
+                    <div class="product-price">89,99 €</div>
+                    <div class="product-actions">
+                        <button class="btn-add-to-cart"><i class="fas fa-cart-plus"></i> Ajouter au panier</button>
+                        <button class="btn-wishlist"><i class="far fa-heart"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Produit 2 -->
+            <div class="product-card">
+                <img src="https://via.placeholder.com/300x300?text=Maillot+France" alt="Maillot France">
+                <div class="product-info">
+                    <h3>Maillot France Extérieur 2022</h3>
+                    <div class="product-price">74,99 €</div>
+                    <div class="product-actions">
+                        <button class="btn-add-to-cart"><i class="fas fa-cart-plus"></i> Ajouter au panier</button>
+                        <button class="btn-wishlist"><i class="far fa-heart"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Produit 3 -->
+            <div class="product-card">
+                <div class="product-badge">Promo</div>
+                <img src="https://via.placeholder.com/300x300?text=Maillot+Lakers" alt="Maillot Lakers">
+                <div class="product-info">
+                    <h3>Maillot Los Angeles Lakers</h3>
+                    <div class="product-price">74,99 €</div>
+                    <div class="product-actions">
+                        <button class="btn-add-to-cart"><i class="fas fa-cart-plus"></i> Ajouter au panier</button>
+                        <button class="btn-wishlist"><i class="far fa-heart"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Produit 4 -->
+            <div class="product-card">
+                <img src="https://via.placeholder.com/300x300?text=Maillot+Real" alt="Maillot Real Madrid">
+                <div class="product-info">
+                    <h3>Maillot Real Madrid Domicile</h3>
+                    <div class="product-price">79,99 €</div>
+                    <div class="product-actions">
+                        <button class="btn-add-to-cart"><i class="fas fa-cart-plus"></i> Ajouter au panier</button>
+                        <button class="btn-wishlist"><i class="far fa-heart"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Produit 5 -->
+            <div class="product-card">
+                <img src="https://via.placeholder.com/300x300?text=Maillot+Barcelone" alt="Maillot Barcelone">
+                <div class="product-info">
+                    <h3>Maillot FC Barcelone 2023</h3>
+                    <div class="product-price">84,99 €</div>
+                    <div class="product-actions">
+                        <button class="btn-add-to-cart"><i class="fas fa-cart-plus"></i> Ajouter au panier</button>
+                        <button class="btn-wishlist"><i class="far fa-heart"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Produit 6 -->
+            <div class="product-card">
+                <div class="product-badge">-20%</div>
+                <img src="https://via.placeholder.com/300x300?text=Maillot+Rugby" alt="Maillot Rugby">
+                <div class="product-info">
+                    <h3>Maillot France Rugby 2023</h3>
+                    <div class="product-price">59,99 €</div>
+                    <div class="product-actions">
+                        <button class="btn-add-to-cart"><i class="fas fa-cart-plus"></i> Ajouter au panier</button>
+                        <button class="btn-wishlist"><i class="far fa-heart"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="pagination">
+            <button class="page-btn"><i class="fas fa-chevron-left"></i></button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </div>
+
+    <script>
+        // Script pour les filtres
+        document.querySelectorAll('.filter-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // Pour les options non-exclusives
+                if(this.parentElement.classList.contains('multi-select')) {
+                    this.classList.toggle('active');
+                } 
+                // Pour les options exclusives
+                else {
+                    // Trouve tous les frères et soeurs et retire la classe active
+                    Array.from(this.parentElement.children).forEach(child => {
+                        child.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                }
+            });
+        });
+        
+        // Mise à jour du prix max affiché
+        const priceRange = document.getElementById('price-range');
+        priceRange.addEventListener('input', function() {
+            // Ici vous pourriez ajouter la logique pour filtrer par prix
+            console.log('Prix max sélectionné:', this.value);
+        });
+        
+        // Bouton réinitialiser
+        document.querySelector('.reset-btn').addEventListener('click', function() {
+            document.querySelectorAll('.filter-option').forEach(opt => {
+                opt.classList.remove('active');
+            });
+            priceRange.value = 200;
+            
+            // Réinitialiser la sélection équipes/nations
+            document.querySelectorAll('#team-country-options input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            document.querySelector('.selected-items').textContent = 'Toutes les équipes/nations';
+        });
+        
+        // Bouton appliquer
+        document.querySelector('.apply-btn').addEventListener('click', function() {
+            // Ici vous pourriez ajouter la logique pour appliquer les filtres
+            alert('Filtres appliqués!');
+        });
+        
+        // Fonctionnalité de pliage des filtres
+        const filtersHeader = document.getElementById('filters-header');
+        const filtersToggle = document.getElementById('filters-toggle');
+        const filtersGrid = document.getElementById('filters-grid');
+        
+        let filtersVisible = true;
+        
+        filtersHeader.addEventListener('click', function() {
+            filtersVisible = !filtersVisible;
+            
+            if(filtersVisible) {
+                filtersGrid.classList.remove('collapsed');
+                filtersToggle.classList.remove('collapsed');
+            } else {
+                filtersGrid.classList.add('collapsed');
+                filtersToggle.classList.add('collapsed');
+            }
+        });
+
+        // Fonctionnalité pour la barre déroulante équipes/pays
+        const teamCountryHeader = document.getElementById('team-country-header');
+        const teamCountryDropdown = document.getElementById('team-country-dropdown');
+        const teamCountryOptions = document.getElementById('team-country-options');
+        const teamCountrySearch = document.getElementById('team-country-search');
+        const selectedItems = document.querySelector('.selected-items');
+        const selectArrow = document.querySelector('.select-arrow');
+
+        // Ouvrir/fermer la dropdown
+        teamCountryHeader.addEventListener('click', function() {
+            teamCountryDropdown.classList.toggle('active');
+            teamCountryHeader.classList.toggle('active');
+            selectArrow.classList.toggle('active');
+        });
+
+        // Recherche dans les options
+        teamCountrySearch.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const options = teamCountryOptions.querySelectorAll('.select-option');
+            
+            options.forEach(option => {
+                const text = option.textContent.toLowerCase();
+                if(text.includes(searchTerm)) {
+                    option.style.display = 'flex';
+                } else {
+                    option.style.display = 'none';
+                }
+            });
+        });
+
+        // Mise à jour des éléments sélectionnés
+        teamCountryOptions.addEventListener('change', function(e) {
+            if(e.target.type === 'checkbox') {
+                updateSelectedItems();
+            }
+        });
+
+        function updateSelectedItems() {
+            const checkedOptions = Array.from(teamCountryOptions.querySelectorAll('input[type="checkbox"]:checked'));
+            
+            if(checkedOptions.length === 0) {
+                selectedItems.textContent = 'Toutes les équipes/nations';
+            } else if(checkedOptions.length === 1) {
+                selectedItems.textContent = checkedOptions[0].value;
+            } else if(checkedOptions.length > 3) {
+                selectedItems.textContent = `${checkedOptions.length} sélections`;
+            } else {
+                selectedItems.textContent = checkedOptions.map(opt => opt.value).join(', ');
+            }
+        }
+
+        // Fermer la dropdown quand on clique ailleurs
+        document.addEventListener('click', function(e) {
+            if(!teamCountryHeader.contains(e.target) && !teamCountryDropdown.contains(e.target)) {
+                teamCountryDropdown.classList.remove('active');
+                teamCountryHeader.classList.remove('active');
+                selectArrow.classList.remove('active');
+            }
+        });
+
+        // Gestion du bouton "Ajouter au panier"
+        document.querySelectorAll('.btn-add-to-cart').forEach(button => {
+            button.addEventListener('click', function() {
+                const productCard = this.closest('.product-card');
+                const productName = productCard.querySelector('h3').textContent;
+                const productPrice = productCard.querySelector('.product-price').textContent;
+                
+                // Ici vous pourriez ajouter la logique pour ajouter au panier
+                alert(`${productName} (${productPrice}) a été ajouté à votre panier`);
+                
+                // Mise à jour du compteur du panier
+                const cartCount = document.querySelector('.cart-count');
+                let currentCount = parseInt(cartCount.textContent);
+                cartCount.textContent = currentCount + 1;
+            });
+        });
+    </script>
+</body>
+</html>

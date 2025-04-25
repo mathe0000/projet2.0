@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panier - ShopTonMaillot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        /* Barre de navigation */
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 0;
+        }
+
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2c3e50;
+            text-decoration: none;
+        }
+
+        .navbar-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .nav-link {
+            font-weight: 600;
+            color: #2c3e50;
+            transition: color 0.3s ease;
+            position: relative;
+            text-decoration: none;
+        }
+
+        .nav-link:hover {
+            color: #e74c3c;
+        }
+
+        .nav-link.active {
+            color: #e74c3c;
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #e74c3c;
+        }
+
+        .cart-icon {
+            position: relative;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            z-index: 1;
+            border-radius: 4px;
+            padding: 10px 0;
+        }
+
+        .dropdown-content a {
+            color: #2c3e50;
+            padding: 10px 16px;
+            display: block;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f5f5f5;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Style de la page panier */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-container {
+            flex: 1;
+            padding: 30px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-title {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+
+        /* Contenu du panier */
+        .cart-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        @media (min-width: 992px) {
+            .cart-container {
+                flex-direction: row;
+            }
+        }
+
+        .cart-items {
+            flex: 1;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-header h2 {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .clear-cart {
+            color: #e74c3c;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 20px;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-image {
+            width: 100px;
+            height: 120px;
+            border-radius: 4px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .item-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .item-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .item-info {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .item-price {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-top: auto;
+        }
+
+        .item-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: space-between;
+        }
+
+        .item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-btn {
+            width: 25px;
+            height: 25px;
+            border: 1px solid #ddd;
+            background-color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quantity-input {
+            width: 40px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 3px;
+        }
+
+        .remove-item {
+            color: #e74c3c;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Résumé du panier */
+        .cart-summary {
+            width: 100%;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        @media (min-width: 992px) {
+            .cart-summary {
+                width: 350px;
+            }
+        }
+
+        .summary-title {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .summary-total {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .checkout-btn:hover {
+            background-color: #1a252f;
+        }
+
+        .continue-shopping {
+            display: block;
+            text-align: center;
+            color: #2c3e50;
+            margin-top: 15px;
+            font-weight: 600;
+        }
+
+        /* Panier vide */
+        .empty-cart {
+            text-align: center;
+            padding: 50px 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            color: #e0e0e0;
+            margin-bottom: 20px;
+        }
+
+        .empty-text {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 25px;
+        }
+
+        .shop-btn {
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .shop-btn:hover {
+            background-color: #1a252f;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .cart-item {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .item-image {
+                width: 100%;
+                height: 200px;
+            }
+            
+            .item-actions {
+                flex-direction: row;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Barre de navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="home.css" class="logo">ShopTonMaillot</a>
+            
+            <div class="navbar-links">
+                <a href="Home.html" class="nav-link">Accueil</a>
+                <a href="collection.html" class="nav-link">Collection</a>
+                <a href="annonce.html" class="nav-link">Mettre une annonce</a>
+                <div class="dropdown">
+                    <a href="#" class="nav-link">Catégories <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="category.html?cat=football">Football</a>
+                        <a href="category.html?cat=basketball">Basketball</a>
+                        <a href="category.html?cat=rugby">Rugby</a>
+                        <a href="category.html?cat=autres">Autres sports</a>
+                    </div>
+                </div>
+                <a href="connexion.html" class="nav-link">Se connecter</a>
+                <a href="panier.html" class="nav-link cart-icon active"><i class="fas fa-shopping-cart"></i> <span class="cart-count">2</span></a>
+                <a href="discussion.html" class="nav-link"><i class="fas fa-envelope"></i></a>
+            </div>
+            
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenu principal -->
+    <div class="main-container">
+        <h1 class="page-title">Votre Panier</h1>
+        
+        <!-- Version avec articles -->
+        <div class="cart-container">
+            <div class="cart-items">
+                <div class="cart-header">
+                    <h2>Vos articles (2)</h2>
+                    <span class="clear-cart">Vider le panier</span>
+                </div>
+                
+                <!-- Article 1 -->
+                <div class="cart-item">
+                    <div class="item-image">
+                        <img src="https://via.placeholder.com/300x400" alt="Maillot PSG">
+                    </div>
+                    <div class="item-details">
+                        <h3 class="item-title">Maillot PSG Domicile 2023</h3>
+                        <div class="item-info">
+                            <div>Taille: M</div>
+                            <div>Couleur: Bleu marine</div>
+                            <div>État: Comme neuf</div>
+                        </div>
+                        <div class="item-price">89,99 €</div>
+                    </div>
+                    <div class="item-actions">
+                        <div class="item-quantity">
+                            <button class="quantity-btn">-</button>
+                            <input type="number" value="1" min="1" class="quantity-input">
+                            <button class="quantity-btn">+</button>
+                        </div>
+                        <div class="remove-item">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Article 2 -->
+                <div class="cart-item">
+                    <div class="item-image">
+                        <img src="https://via.placeholder.com/300x400" alt="Maillot France">
+                    </div>
+                    <div class="item-details">
+                        <h3 class="item-title">Maillot France Extérieur 2022</h3>
+                        <div class="item-info">
+                            <div>Taille: L</div>
+                            <div>Couleur: Blanc</div>
+                            <div>État: Très bon état</div>
+                        </div>
+                        <div class="item-price">74,99 €</div>
+                    </div>
+                    <div class="item-actions">
+                        <div class="item-quantity">
+                            <button class="quantity-btn">-</button>
+                            <input type="number" value="1" min="1" class="quantity-input">
+                            <button class="quantity-btn">+</button>
+                        </div>
+                        <div class="remove-item">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Résumé du panier -->
+            <div class="cart-summary">
+                <h3 class="summary-title">Résumé de la commande</h3>
+                
+                <div class="summary-row">
+                    <span>Sous-total (2 articles)</span>
+                    <span>164,98 €</span>
+                </div>
+                
+                <div class="summary-row">
+                    <span>Livraison</span>
+                    <span>4,99 €</span>
+                </div>
+                
+                <div class="summary-row">
+                    <span>Remise</span>
+                    <span>-5,00 €</span>
+                </div>
+                
+                <div class="summary-row summary-total">
+                    <span>Total</span>
+                    <span>164,97 €</span>
+                </div>
+                
+                <button class="checkout-btn">Passer la commande</button>
+                <a href="collection.html" class="continue-shopping">Continuer vos achats</a>
+            </div>
+        </div>
+        
+        <!-- Version panier vide (à décommenter si nécessaire) -->
+        <!--
+        <div class="empty-cart">
+            <div class="empty-icon">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+            <h2 class="empty-text">Votre panier est vide</h2>
+            <a href="collection.html" class="shop-btn">Découvrir notre collection</a>
+        </div>
+        -->
+    </div>
+
+   
+</body>
+</html>

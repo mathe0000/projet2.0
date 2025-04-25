@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messagerie - ShopTonMaillot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        /* Barre de navigation */
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 0;
+        }
+
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2c3e50;
+            text-decoration: none;
+        }
+
+        .navbar-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .nav-link {
+            font-weight: 600;
+            color: #2c3e50;
+            transition: color 0.3s ease;
+            position: relative;
+            text-decoration: none;
+        }
+
+        .nav-link:hover {
+            color: #e74c3c;
+        }
+
+        .nav-link.active {
+            color: #e74c3c;
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #e74c3c;
+        }
+
+        .cart-icon {
+            position: relative;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            z-index: 1;
+            border-radius: 4px;
+            padding: 10px 0;
+        }
+
+        .dropdown-content a {
+            color: #2c3e50;
+            padding: 10px 16px;
+            display: block;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f5f5f5;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Style de la messagerie */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-container {
+            flex: 1;
+            display: flex;
+            padding: 30px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            gap: 30px;
+        }
+
+        .page-title {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+
+        /* Liste des conversations */
+        .conversations-list {
+            width: 350px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .conversation-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .conversation-header h2 {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .new-message-btn {
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .new-message-btn:hover {
+            background-color: #1a252f;
+        }
+
+        .conversation-search {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .conversation-items {
+            height: calc(100vh - 250px);
+            overflow-y: auto;
+        }
+
+        .conversation-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            gap: 15px;
+        }
+
+        .conversation-item:hover, .conversation-item.active {
+            background-color: #f9f9f9;
+        }
+
+        .conversation-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .conversation-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .conversation-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .conversation-user {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .conversation-time {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+        }
+
+        .conversation-preview {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .unread-badge {
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            margin-left: auto;
+        }
+
+        /* Zone de discussion */
+        .conversation-detail {
+            flex: 1;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .conversation-topbar {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .conversation-back {
+            display: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .conversation-title {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .conversation-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #f9f9f9;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            max-width: 70%;
+        }
+
+        .message.received {
+            margin-right: auto;
+        }
+
+        .message.sent {
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .message-content {
+            padding: 12px 15px;
+            border-radius: 18px;
+            display: inline-block;
+            font-size: 0.95rem;
+        }
+
+        .message.received .message-content {
+            background-color: white;
+            color: #333;
+            border: 1px solid #e0e0e0;
+        }
+
+        .message.sent .message-content {
+            background-color: #2c3e50;
+            color: white;
+        }
+
+        .message-time {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+
+        .conversation-composer {
+            padding: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .message-form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            resize: none;
+        }
+
+        .send-btn {
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .send-btn:hover {
+            background-color: #1a252f;
+        }
+
+        /* État vide */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            padding: 30px;
+            color: #7f8c8d;
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #e0e0e0;
+        }
+
+        .empty-text {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .conversations-list {
+                width: 100%;
+            }
+            
+            .conversation-detail {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                border-radius: 0;
+                z-index: 100;
+            }
+            
+            .conversation-back {
+                display: block;
+            }
+            
+            .conversation-detail.active {
+                display: flex;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Barre de navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="Home.html" class="logo">ShopTonMaillot</a>
+            
+            <div class="navbar-links">
+                <a href="Home.html" class="nav-link">Accueil</a>
+                <a href="collection.html" class="nav-link">Collection</a>
+                <a href="annonce.html" class="nav-link">Mettre une annonce</a>
+                <div class="dropdown">
+                    <a href="#" class="nav-link">Catégories <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="category.html?cat=football">Football</a>
+                        <a href="category.html?cat=basketball">Basketball</a>
+                        <a href="category.html?cat=rugby">Rugby</a>
+                        <a href="category.html?cat=autres">Autres sports</a>
+                    </div>
+                </div>
+                <a href="connexion.html" class="nav-link">Se connecter</a>
+                <a href="panier.html" class="nav-link cart-icon"><i class="fas fa-shopping-cart"></i> <span class="cart-count">0</span></a>
+                <a href="discussion.html" class="nav-link active"><i class="fas fa-envelope"></i></a>
+            </div>
+            
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenu principal -->
+    <div class="main-container">
+        <!-- Liste des conversations -->
+        <div class="conversations-list">
+            <div class="conversation-header">
+                <h2>Messages</h2>
+                <button class="new-message-btn">Nouveau</button>
+            </div>
+            
+            <div class="conversation-search">
+                <input type="text" class="search-input" placeholder="Rechercher une conversation...">
+            </div>
+            
+            <div class="conversation-items">
+                <!-- Conversation 1 -->
+                <div class="conversation-item active">
+                    <div class="conversation-avatar">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Jean D.">
+                    </div>
+                    <div class="conversation-info">
+                        <div class="conversation-user">
+                            <span>Jean D.</span>
+                            <span class="conversation-time">10:30</span>
+                        </div>
+                        <div class="conversation-preview">
+                            Bonjour, je suis intéressé par le maillot du PSG que vous vendez...
+                        </div>
+                    </div>
+                    <div class="unread-badge">3</div>
+                </div>
+                
+                <!-- Conversation 2 -->
+                <div class="conversation-item">
+                    <div class="conversation-avatar">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Marie L.">
+                    </div>
+                    <div class="conversation-info">
+                        <div class="conversation-user">
+                            <span>Marie L.</span>
+                            <span class="conversation-time">Hier</span>
+                        </div>
+                        <div class="conversation-preview">
+                            Merci pour l'envoi rapide, le maillot est parfait !
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Conversation 3 -->
+                <div class="conversation-item">
+                    <div class="conversation-avatar">
+                        <img src="https://randomuser.me/api/portraits/men/67.jpg" alt="Thomas P.">
+                    </div>
+                    <div class="conversation-info">
+                        <div class="conversation-user">
+                            <span>Thomas P.</span>
+                            <span class="conversation-time">Lundi</span>
+                        </div>
+                        <div class="conversation-preview">
+                            Pourriez-vous me faire une réduction si je prends les deux maillots ?
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Conversation 4 -->
+                <div class="conversation-item">
+                    <div class="conversation-avatar">
+                        <img src="https://randomuser.me/api/portraits/women/28.jpg" alt="Sophie M.">
+                    </div>
+                    <div class="conversation-info">
+                        <div class="conversation-user">
+                            <span>Sophie M.</span>
+                            <span class="conversation-time">12/05</span>
+                        </div>
+                        <div class="conversation-preview">
+                            Le maillot est-il toujours disponible ?
+                        </div>
+                    </div>
+                    <div class="unread-badge">1</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Détail de la conversation -->
+        <div class="conversation-detail active">
+            <div class="conversation-topbar">
+                <div class="conversation-back">
+                    <i class="fas fa-arrow-left"></i>
+                </div>
+                <div class="conversation-title">Discussion avec Jean D.</div>
+            </div>
+            
+            <div class="conversation-messages">
+                <!-- Message reçu -->
+                <div class="message received">
+                    <div class="message-content">
+                        Bonjour, je suis intéressé par le maillot du PSG que vous vendez. Est-il toujours disponible ?
+                    </div>
+                    <div class="message-time">10:30</div>
+                </div>
+                
+                <!-- Message envoyé -->
+                <div class="message sent">
+                    <div class="message-content">
+                        Bonjour Jean, oui le maillot est toujours disponible. Il est en taille M, comme neuf.
+                    </div>
+                    <div class="message-time">10:35</div>
+                </div>
+                
+                <!-- Message reçu -->
+                <div class="message received">
+                    <div class="message-content">
+                        Parfait ! Pourriez-vous me le réserver jusqu'à demain ? Je peux passer le chercher en main propre.
+                    </div>
+                    <div class="message-time">10:37</div>
+                </div>
+                
+                <!-- Message envoyé -->
+                <div class="message sent">
+                    <div class="message-content">
+                        Bien sûr, je vous le réserve. On peut se retrouver en centre-ville vers 18h si cela vous convient ?
+                    </div>
+                    <div class="message-time">10:39</div>
+                </div>
+            </div>
+            
+            <div class="conversation-composer">
+                <form class="message-form">
+                    <textarea class="message-input" placeholder="Écrivez votre message..."></textarea>
+                    <button type="submit" class="send-btn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- État vide (quand aucune conversation n'est sélectionnée) -->
+        <!-- <div class="conversation-detail">
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="far fa-comment-dots"></i>
+                </div>
+                <div class="empty-text">
+                    Sélectionnez une conversation pour commencer à discuter
+                </div>
+            </div>
+        </div> -->
+    </div>
+
+   
+</body>
+</html>

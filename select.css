@@ -1,0 +1,41 @@
+.card {
+    width: 250px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    margin: 15px;
+    background-color: white;
+    font-family: Arial, sans-serif;
+  }
+  
+  .card-img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+  }
+  
+  .card-body {
+    padding: 10px;
+  }
+  
+  .card-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0 0 5px;
+  }
+  
+  .card-price {
+    color: #333;
+    margin: 5px 0;
+  }
+  
+  .card-note {
+    color: #f39c12;
+    font-weight: bold;
+    margin: 5px 0;
+  }
+  
+  .card-localisation, .card-payment {
+    font-size: 13px;
+    color: #666;
+  }

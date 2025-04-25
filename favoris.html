@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Favoris - ShopTonMaillot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset et styles de base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        /* Barre de navigation */
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 0;
+        }
+        
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        
+        .navbar-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+        
+        .nav-link {
+            font-weight: 600;
+            color: #2c3e50;
+            transition: color 0.3s ease;
+            position: relative;
+            padding: 5px 0;
+        }
+        
+        .nav-link:hover {
+            color: #e74c3c;
+        }
+        
+        .nav-link.active {
+            color: #e74c3c;
+        }
+        
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #e74c3c;
+        }
+        
+        /* Dropdown des catégories */
+        .dropdown {
+            position: relative;
+        }
+        
+        .dropdown-toggle {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+        
+        .dropdown-toggle i {
+            transition: transform 0.3s ease;
+            font-size: 0.8rem;
+        }
+        
+        .dropdown-content {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            min-width: 200px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 10px 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        .dropdown:hover .dropdown-content {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .dropdown:hover .dropdown-toggle i {
+            transform: rotate(180deg);
+        }
+        
+        .dropdown-item {
+            display: block;
+            padding: 8px 20px;
+            color: #2c3e50;
+            transition: all 0.3s ease;
+        }
+        
+        .dropdown-item:hover {
+            background: #f8f9fa;
+            color: #e74c3c;
+            padding-left: 25px;
+        }
+        
+        /* Icônes */
+        .icon-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Bouton menu mobile */
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #2c3e50;
+        }
+        
+        /* Contenu principal */
+        .main-container {
+            flex: 1;
+            width: 90%;
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 15px;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .page-title {
+            font-size: 2rem;
+            color: #2c3e50;
+        }
+        
+        .favorites-count {
+            color: #7f8c8d;
+            font-weight: 500;
+            margin-top: 5px;
+        }
+        
+        .clear-favorites {
+            color: #e74c3c;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.3s ease;
+        }
+        
+        .clear-favorites:hover {
+            color: #c0392b;
+        }
+        
+        /* Grille de favoris */
+        .favorites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        
+        .favorite-item {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .favorite-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+        }
+        
+        .favorite-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        
+        .favorite-info {
+            padding: 18px;
+        }
+        
+        .favorite-title {
+            font-size: 1.1rem;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .favorite-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+        
+        .favorite-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            border: none;
+            border-radius: 6px;
+            padding: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: #2c3e50;
+            color: white;
+            flex: 1;
+        }
+        
+        .btn-primary:hover {
+            background: #1a252f;
+        }
+        
+        .btn-danger {
+            background: #f8f9fa;
+            color: #e74c3c;
+            width: 40px;
+        }
+        
+        .btn-danger:hover {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        /* Favoris vides */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        
+        .empty-icon {
+            font-size: 3rem;
+            color: #bdc3c7;
+            margin-bottom: 20px;
+        }
+        
+        .empty-title {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .empty-text {
+            color: #7f8c8d;
+            margin-bottom: 25px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .btn-shop {
+            background: #2c3e50;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-shop:hover {
+            background: #1a252f;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .favorites-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .navbar-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .favorites-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .favorite-item {
+                max-width: 350px;
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Barre de navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="logo">ShopTonMaillot</a>
+            
+            <div class="navbar-links">
+                <a href="Home.html" class="nav-link">Accueil</a>
+                <a href="collection.html" class="nav-link">Collection</a>
+                <a href="annonce.html" class="nav-link">Vendre</a>
+                
+                <div class="dropdown">
+                    <div class="dropdown-toggle nav-link">
+                        Catégories <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="dropdown-content">
+                        <a href="category.html?cat=football" class="dropdown-item">Football</a>
+                        <a href="category.html?cat=basketball" class="dropdown-item">Basketball</a>
+                        <a href="category.html?cat=rugby" class="dropdown-item">Rugby</a>
+                        <a href="category.html?cat=autres" class="dropdown-item">Autres sports</a>
+                    </div>
+                </div>
+                
+                <a href="connexion.html" class="nav-link">Connexion</a>
+                
+                <a href="cart.html" class="nav-link icon-wrapper">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="badge">3</span>
+                </a>
+                
+                <a href="messagerie.html" class="nav-link icon-wrapper">
+                    <i class="fas fa-envelope"></i>
+                    <span class="badge">1</span>
+                </a>
+            </div>
+            
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Contenu principal -->
+    <div class="main-container">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Mes Favoris</h1>
+                <div class="favorites-count">3 articles sauvegardés</div>
+            </div>
+            <button class="clear-favorites" id="clear-favorites">
+                <i class="fas fa-trash-alt"></i>
+                <span>Vider les favoris</span>
+            </button>
+        </div>
+        
+        <!-- Liste des favoris -->
+        <div class="favorites-grid" id="favorites-grid">
+            <!-- Article 1 -->
+            <div class="favorite-item">
+                <img src="https://via.placeholder.com/400x400?text=Maillot+PSG+2023" alt="Maillot PSG 2023" class="favorite-img">
+                <div class="favorite-info">
+                    <h3 class="favorite-title">Maillot PSG Domicile 2023-24</h3>
+                    <div class="favorite-price">89,99 €</div>
+                    <div class="favorite-actions">
+                        <button class="btn btn-primary">
+                            <i class="fas fa-cart-plus"></i>
+                            Ajouter
+                        </button>
+                        <button class="btn btn-danger" data-id="1">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Article 2 -->
+            <div class="favorite-item">
+                <img src="https://via.placeholder.com/400x400?text=Maillot+France+2022" alt="Maillot France 2022" class="favorite-img">
+                <div class="favorite-info">
+                    <h3 class="favorite-title">Maillot France Extérieur 2022</h3>
+                    <div class="favorite-price">74,99 €</div>
+                    <div class="favorite-actions">
+                        <button class="btn btn-primary">
+                            <i class="fas fa-cart-plus"></i>
+                            Ajouter
+                        </button>
+                        <button class="btn btn-danger" data-id="2">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Article 3 -->
+            <div class="favorite-item">
+                <img src="https://via.placeholder.com/400x400?text=Maillot+Lakers" alt="Maillot Lakers" class="favorite-img">
+                <div class="favorite-info">
+                    <h3 class="favorite-title">Maillot Lakers Icon Edition</h3>
+                    <div class="favorite-price">69,99 €</div>
+                    <div class="favorite-actions">
+                        <button class="btn btn-primary">
+                            <i class="fas fa-cart-plus"></i>
+                            Ajouter
+                        </button>
+                        <button class="btn btn-danger" data-id="3">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- État vide (caché par défaut) -->
+        <div class="empty-state" id="empty-state" style="display: none;">
+            <i class="far fa-heart empty-icon"></i>
+            <h2 class="empty-title">Votre liste de favoris est vide</h2>
+            <p class="empty-text">Parcourez notre collection et ajoutez vos articles préférés à vos favoris pour les retrouver facilement.</p>
+            <a href="collection.html" class="btn-shop">Découvrir la collection</a>
+        </div>
+    </div>
+
+   
+</body>
+</html>

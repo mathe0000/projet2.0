@@ -1,0 +1,56 @@
+<!-- Filtre Équipe/Nation avec barre déroulante -->
+<div class="filter-group">
+    <label class="filter-label">
+        <i class="fas fa-users"></i>
+        Équipe/Nation
+    </label>
+    <div class="team-country-select">
+        <div class="select-header" id="team-country-header">
+            <div class="selected-items">Toutes les équipes/nations</div>
+            <i class="fas fa-chevron-down select-arrow"></i>
+        </div>
+        <div class="select-dropdown" id="team-country-dropdown">
+            <div class="select-search">
+                <input type="text" placeholder="Rechercher..." id="team-country-search">
+            </div>
+            <div class="select-options" id="team-country-options">
+                <div class="select-option">
+                    <input type="checkbox" id="psg" value="PSG">
+                    <label for="psg">PSG</label>
+                </div>
+                <div class="select-option">
+                    <input type="checkbox" id="real-madrid" value="Real Madrid">
+                    <label for="real-madrid">Real Madrid</label>
+                </div>
+                <div class="select-option">
+                    <input type="checkbox" id="barcelone" value="FC Barcelone">
+                    <label for="barcelone">FC Barcelone</label>
+                </div>
+                <div class="select-option">
+                    <input type="checkbox" id="bayern" value="Bayern Munich">
+                    <label for="bayern">Bayern Munich</label>
+                </div>
+                <div class="select-option">
+                    <input type="checkbox" id="france" value="France">
+                    <label for="france">France</label>
+                </div>
+                <div class="select-option">
+                    <input type="checkbox" id="bresil" value="Brésil">
+                    <label for="bresil">Brésil</label>
+                </div>
+                <div class="select-option">
+                    <input type="checkbox" id="argentine" value="Argentine">
+                    <label for="argentine">Argentine</label>
+                </div>
+                <div class="select-option">
+                    <input type="checkbox" id="lakers" value="Lakers">
+                    <label for="lakers">Lakers</label>
+                </div>
+                <div class="select-option">
+                    <input type="checkbox" id="warriors" value="Warriors">
+                    <label for="warriors">Warriors</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

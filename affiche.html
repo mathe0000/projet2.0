@@ -309,6 +309,38 @@
             min-width: 120px;
         }
 
+        /* Section Contact */
+        .product-contact {
+            grid-column: 1 / -1;
+            margin-top: 40px;
+            border-top: 1px solid #eee;
+            padding-top: 40px;
+        }
+
+        .contact-card {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .contact-btn {
+            display: inline-block;
+            background-color: #e74c3c;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .contact-btn:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
         /* Responsive */
         @media (max-width: 992px) {
             .product-page {
@@ -353,6 +385,14 @@
             .main-image {
                 order: 1;
                 height: 350px;
+            }
+
+            .product-contact {
+                padding-top: 30px;
+            }
+            
+            .contact-card {
+                padding: 20px;
             }
         }
 
@@ -470,10 +510,18 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Section Contact -->
+            <div class="product-contact">
+                <div class="contact-card">
+                    <h2 style="margin-top: 0; color: #2c3e50;">Une question sur ce produit ?</h2>
+                    <p style="margin-bottom: 20px;">Contactez-nous directement pour plus d'informations sur ce maillot.</p>
+                    <a href="contact.html" class="contact-btn">
+                        <i class="fas fa-envelope" style="margin-right: 8px;"></i> Contacter le vendeur
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
-
-            
- 
 </body>
 </html>

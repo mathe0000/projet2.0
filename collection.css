@@ -1,56 +1,365 @@
-<!-- Filtre Équipe/Nation avec barre déroulante -->
-<div class="filter-group">
-    <label class="filter-label">
-        <i class="fas fa-users"></i>
-        Équipe/Nation
-    </label>
-    <div class="team-country-select">
-        <div class="select-header" id="team-country-header">
-            <div class="selected-items">Toutes les équipes/nations</div>
-            <i class="fas fa-chevron-down select-arrow"></i>
-        </div>
-        <div class="select-dropdown" id="team-country-dropdown">
-            <div class="select-search">
-                <input type="text" placeholder="Rechercher..." id="team-country-search">
-            </div>
-            <div class="select-options" id="team-country-options">
-                <div class="select-option">
-                    <input type="checkbox" id="psg" value="PSG">
-                    <label for="psg">PSG</label>
-                </div>
-                <div class="select-option">
-                    <input type="checkbox" id="real-madrid" value="Real Madrid">
-                    <label for="real-madrid">Real Madrid</label>
-                </div>
-                <div class="select-option">
-                    <input type="checkbox" id="barcelone" value="FC Barcelone">
-                    <label for="barcelone">FC Barcelone</label>
-                </div>
-                <div class="select-option">
-                    <input type="checkbox" id="bayern" value="Bayern Munich">
-                    <label for="bayern">Bayern Munich</label>
-                </div>
-                <div class="select-option">
-                    <input type="checkbox" id="france" value="France">
-                    <label for="france">France</label>
-                </div>
-                <div class="select-option">
-                    <input type="checkbox" id="bresil" value="Brésil">
-                    <label for="bresil">Brésil</label>
-                </div>
-                <div class="select-option">
-                    <input type="checkbox" id="argentine" value="Argentine">
-                    <label for="argentine">Argentine</label>
-                </div>
-                <div class="select-option">
-                    <input type="checkbox" id="lakers" value="Lakers">
-                    <label for="lakers">Lakers</label>
-                </div>
-                <div class="select-option">
-                    <input type="checkbox" id="warriors" value="Warriors">
-                    <label for="warriors">Warriors</label>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+:root {
+    --primary-color: #2a9d8f;
+    --secondary-color: #e63946;
+    --dark-color: #2c3e50;
+    --light-color: #f8f9fa;
+    --gray-color: #6c757d;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.collection-header {
+    background: linear-gradient(135deg, var(--dark-color), #1a2a3a);
+    color: white;
+    padding: 100px 20px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.collection-header::after {
+    content: "";
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: var(--light-color);
+    transform: skewY(-2deg);
+    z-index: 1;
+}
+
+.collection-header h1 {
+    font-size: 2.8rem;
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 2;
+}
+
+.collection-header p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    position: relative;
+    z-index: 2;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.collection-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    position: relative;
+    z-index: 2;
+}
+
+/* Filtres améliorés */
+.filters-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    padding: 30px;
+    margin-bottom: 40px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.filters-title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+    color: var(--dark-color);
+    font-size: 1.5rem;
+}
+
+.filters-title i {
+    margin-right: 15px;
+    font-size: 1.8rem;
+    color: var(--primary-color);
+}
+
+.filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+}
+
+.filter-group {
+    position: relative;
+}
+
+.filter-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: var(--dark-color);
+    font-size: 1rem;
+}
+
+.filter-select, .filter-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+    appearance: none;
+}
+
+.filter-select {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 15px;
+}
+
+.filter-select:focus, .filter-input:focus {
+    border-color: var(--primary-color);
+    background: white;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(42, 157, 143, 0.2);
+}
+
+.filter-submit {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.btn-filter {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 14px 30px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-filter:hover {
+    background: #21867a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.btn-filter i {
+    margin-right: 10px;
+}
+
+/* Grille de produits */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.product-card {
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    background: white;
+    position: relative;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    border-color: var(--primary-color);
+}
+
+.product-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--secondary-color);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    z-index: 2;
+}
+
+.product-image {
+    height: 250px;
+    overflow: hidden;
+    position: relative;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.product-card:hover .product-image img {
+    transform: scale(1.05);
+}
+
+.product-info {
+    padding: 20px;
+}
+
+.product-sport {
+    display: inline-block;
+    background: rgba(42, 157, 143, 0.1);
+    color: var(--primary-color);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.product-title {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    color: var(--dark-color);
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.product-meta {
+    font-size: 0.95rem;
+    color: var(--gray-color);
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.product-meta i {
+    color: var(--primary-color);
+    font-size: 0.8rem;
+}
+
+.product-price {
+    font-weight: bold;
+    color: var(--secondary-color);
+    font-size: 1.4rem;
+    margin: 15px 0;
+}
+
+.product-seller {
+    font-size: 0.9rem;
+    color: var(--gray-color);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.product-seller i {
+    color: var(--primary-color);
+}
+
+.product-fav {
+    font-size: 0.9rem;
+    color: var(--gray-color);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 50px 0 30px;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.pagination a, .pagination span {
+    padding: 10px 16px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--dark-color);
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.pagination a:hover {
+    background-color: #f1f3f5;
+    border-color: #ced4da;
+}
+
+.pagination .current {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+/* Aucun résultat */
+.no-products {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 80px 20px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    margin-top: 20px;
+}
+
+.no-products i {
+    font-size: 3rem;
+    color: var(--gray-color);
+    margin-bottom: 20px;
+}
+
+.no-products h3 {
+    font-size: 1.5rem;
+    color: var(--dark-color);
+    margin-bottom: 15px;
+}
+
+.no-products p {
+    font-size: 1.1rem;
+    color: var(--gray-color);
+    margin-bottom: 25px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Boutons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 25px;
+    background-color: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.btn:hover {
+    background-color: #21867a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.btn-outline:hover {
+    background: rgba(42, 157, 143, 0.1);
+}

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informations Personnelles - ShopTonMaillot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="informationper.css">
+</head>
+<body>
+    <!-- Barre de navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="Home.html" class="logo">ShopTonMaillot</a>
+        </div>
+    </nav>
+
+    <!-- Contenu principal -->
+    <div class="main-container">
+        <h1 class="page-title">Informations Personnelles</h1>
+
+        <!-- Section Informations de base -->
+        <div class="section">
+            <h2 class="section-title">Informations de compte</h2>
+            
+            <form action="#" method="post">
+                <div class="form-group">
+                    <label for="email" class="form-label">Adresse email</label>
+                    <input type="email" id="email" class="form-input" value="utilisateur@example.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone" class="form-label">Numéro de téléphone</label>
+                    <input type="tel" id="phone" class="form-input" value="+33 6 12 34 56 78">
+                </div>
+                
+                <div class="form-actions">
+                    <button type="reset" class="btn btn-secondary">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Section Mot de passe -->
+        <div class="section">
+            <h2 class="section-title">Changer le mot de passe</h2>
+            
+            <form action="#" method="post">
+                <div class="form-group">
+                    <label for="current-password" class="form-label">Mot de passe actuel</label>
+                    <input type="password" id="current-password" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="new-password" class="form-label">Nouveau mot de passe</label>
+                    <input type="password" id="new-password" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirm-password" class="form-label">Confirmer le nouveau mot de passe</label>
+                    <input type="password" id="confirm-password" class="form-input" required>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="reset" class="btn btn-secondary">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Changer le mot de passe</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

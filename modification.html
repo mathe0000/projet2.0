@@ -1,0 +1,65 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="modale.css">
+ </head>
+ <body>
+    <!-- Modale d'édition -->
+    <a href="#editModal" class="open-modal-btn">Ouvrir Modale Édition</a>
+ <div id="editModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Modifier l'annonce</h3>
+            <a href="#" class="close-btn">&times;</a>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="editTitle" class="form-label">Titre de l'annonce</label>
+                <input type="text" id="editTitle" class="form-input" value="Maillot PSG Domicile 2023-2024">
+            </div>
+            
+            <div class="form-group">
+                <label for="editPrice" class="form-label">Prix (€)</label>
+                <input type="number" id="editPrice" class="form-input" value="89.99" step="0.01">
+            </div>
+            
+            <div class="form-group">
+                <label for="editSize" class="form-label">Taille</label>
+                <select id="editSize" class="form-select">
+                    <option value="XS">XS (Extra Small)</option>
+                    <option value="S" selected>S (Small)</option>
+                    <option value="M">M (Medium)</option>
+                    <option value="L">L (Large)</option>
+                    <option value="XL">XL (Extra Large)</option>
+                    <option value="XXL">XXL (Double Extra Large)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="editType" class="form-label">Type de maillot</label>
+                <select id="editType" class="form-select">
+                    <option value="domicile" selected>Domicile</option>
+                    <option value="exterieur">Extérieur</option>
+                    <option value="entrainement">Entraînement</option>
+                    <option value="third">Third (3ème maillot)</option>
+                    <option value="vintage">Vintage</option>
+                    <option value="special">Édition spéciale</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="editDescription" class="form-label">Description</label>
+                <textarea id="editDescription" class="form-input" rows="4">Maillot officiel du PSG pour la saison 2023-2024, taille M, jamais porté.</textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn btn-cancel">Annuler</a>
+            <a href="#" class="btn btn-save">Enregistrer</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

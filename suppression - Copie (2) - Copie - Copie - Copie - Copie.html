@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modales - ShopTonMaillot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="modale.css">
+    <style>
+        
+    </style>
+</head>
+<body>
+
+    <!-- Boutons pour ouvrir les modales -->
+    <a href="#deleteModal" class="open-modal-btn">Ouvrir Modale Suppression</a>
+    
+
+    <!-- Modale de suppression -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Supprimer l'annonce</h3>
+                <a href="#" class="close-btn">&times;</a>
+            </div>
+            <div class="modal-body">
+                <p class="modal-text">Êtes-vous sûr de vouloir supprimer cette annonce ? Cette action est irréversible.</p>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-cancel">Annuler</a>
+                <a href="#" class="btn btn-confirm">Supprimer</a>
+            </div>
+        </div>
+    </div>
+
+   

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Annonces - ShopTonMaillot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Barre de navigation - Même style que précédemment */
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 0;
+        }
+
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2c3e50;
+            text-decoration: none;
+        }
+
+        .navbar-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .nav-link {
+            font-weight: 600;
+            color: #2c3e50;
+            transition: color 0.3s ease;
+            position: relative;
+            text-decoration: none;
+        }
+
+        .nav-link:hover {
+            color: #e74c3c;
+        }
+
+        .nav-link.active {
+            color: #e74c3c;
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #e74c3c;
+        }
+
+        .cart-icon {
+            position: relative;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            z-index: 1;
+            border-radius: 4px;
+            padding: 10px 0;
+        }
+
+        .dropdown-content a {
+            color: #2c3e50;
+            padding: 10px 16px;
+            display: block;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f5f5f5;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Contenu principal */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-container {
+            flex: 1;
+            width: 90%;
+            max-width: 1200px;
+            margin: 30px auto;
+        }
+
+        /* Page Mes Annonces */
+        .my-ads-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .btn-new-ad {
+            background-color: #e74c3c;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-new-ad:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .ads-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .ad-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .ad-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .ad-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid #eee;
+        }
+
+        .ad-content {
+            padding: 20px;
+        }
+
+        .ad-title {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            margin: 0 0 10px 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .ad-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+
+        .ad-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .ad-actions {
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 8px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+
+        .btn-edit {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-delete {
+            background-color: #f8f9fa;
+            color: #e74c3c;
+            border: 1px solid #e0e0e0;
+        }
+
+        .btn-delete:hover {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .no-ads {
+            text-align: center;
+            padding: 50px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .no-ads-icon {
+            font-size: 3rem;
+            color: #bdc3c7;
+            margin-bottom: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .my-ads-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .ads-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .btn-action {
+                font-size: 0.8rem;
+                padding: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Barre de navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="Home.html" class="logo">ShopTonMaillot</a>
+            
+            <div class="navbar-links">
+                <a href="Home.html" class="nav-link">Accueil</a>
+                <a href="collection.html" class="nav-link">Collection</a>
+                <a href="annonce.html" class="nav-link active">Mettre une annonce</a>
+                <div class="dropdown">
+                    <a href="#" class="nav-link">Catégories <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="category.html?cat=football">Football</a>
+                        <a href="category.html?cat=basketball">Basketball</a>
+                        <a href="category.html?cat=rugby">Rugby</a>
+                        <a href="category.html?cat=autres">Autres sports</a>
+                    </div>
+                </div>
+                <a href="connexion.html" class="nav-link">Se connecter</a>
+                <a href="panier.html" class="nav-link cart-icon"><i class="fas fa-shopping-cart"></i> <span class="cart-count">0</span></a>
+                <a href="discussion.html" class="nav-link"><i class="fas fa-envelope"></i></a>
+            </div>
+            
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenu principal - Mes Annonces -->
+    <div class="main-container">
+        <div class="my-ads-header">
+            <h1 class="page-title">Mes Annonces</h1>
+            <a href="annonce.html" class="btn-new-ad">
+                <i class="fas fa-plus"></i> Nouvelle annonce
+            </a>
+        </div>
+
+        <div class="ads-grid">
+            <!-- Annonce 1 -->
+            <div class="ad-card">
+                <img src="https://via.placeholder.com/400x300?text=Maillot+PSG+2023" alt="Maillot PSG" class="ad-image">
+                <div class="ad-content">
+                    <h3 class="ad-title">Maillot PSG Domicile 2023-2024</h3>
+                    <div class="ad-price">89,99 €</div>
+                    <div class="ad-meta">
+                        <span><i class="far fa-eye"></i> 124 vues</span>
+                        <span><i class="far fa-calendar-alt"></i> 15/06/2023</span>
+                    </div>
+                    <div class="ad-actions">
+                        <button class="btn-action btn-edit">
+                            <i class="fas fa-edit"></i> Modifier
+                        </button>
+                        <button class="btn-action btn-delete">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Annonce 2 -->
+            <div class="ad-card">
+                <img src="https://via.placeholder.com/400x300?text=Maillot+OM+2023" alt="Maillot OM" class="ad-image">
+                <div class="ad-content">
+                    <h3 class="ad-title">Maillot Olympique de Marseille 2023</h3>
+                    <div class="ad-price">79,99 €</div>
+                    <div class="ad-meta">
+                        <span><i class="far fa-eye"></i> 87 vues</span>
+                        <span><i class="far fa-calendar-alt"></i> 10/06/2023</span>
+                    </div>
+                    <div class="ad-actions">
+                        <button class="btn-action btn-edit">
+                            <i class="fas fa-edit"></i> Modifier
+                        </button>
+                        <button class="btn-action btn-delete">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Annonce 3 -->
+            <div class="ad-card">
+                <img src="https://via.placeholder.com/400x300?text=Maillot+France+2022" alt="Maillot France" class="ad-image">
+                <div class="ad-content">
+                    <h3 class="ad-title">Maillot Equipe de France 2022</h3>
+                    <div class="ad-price">69,99 €</div>
+                    <div class="ad-meta">
+                        <span><i class="far fa-eye"></i> 156 vues</span>
+                        <span><i class="far fa-calendar-alt"></i> 05/06/2023</span>
+                    </div>
+                    <div class="ad-actions">
+                        <button class="btn-action btn-edit">
+                            <i class="fas fa-edit"></i> Modifier
+                        </button>
+                        <button class="btn-action btn-delete">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Annonce 4 -->
+            <div class="ad-card">
+                <img src="https://via.placeholder.com/400x300?text=Maillot+Barcelone" alt="Maillot Barcelone" class="ad-image">
+                <div class="ad-content">
+                    <h3 class="ad-title">Maillot FC Barcelone Edition Spéciale</h3>
+                    <div class="ad-price">99,99 €</div>
+                    <div class="ad-meta">
+                        <span><i class="far fa-eye"></i> 203 vues</span>
+                        <span><i class="far fa-calendar-alt"></i> 01/06/2023</span>
+                    </div>
+                    <div class="ad-actions">
+                        <button class="btn-action btn-edit">
+                            <i class="fas fa-edit"></i> Modifier
+                        </button>
+                        <button class="btn-action btn-delete">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exemple quand il n'y a pas d'annonces -->
+        <!-- <div class="no-ads">
+            <div class="no-ads-icon">
+                <i class="far fa-folder-open"></i>
+            </div>
+            <h3>Vous n'avez pas encore d'annonces</h3>
+            <p>Créez votre première annonce et commencez à vendre dès maintenant !</p>
+            <a href="annonce.html" class="btn-new-ad" style="margin-top: 20px;">
+                <i class="fas fa-plus"></i> Créer une annonce
+            </a>
+        </div> -->
+    </div>
+</body>
+</html>

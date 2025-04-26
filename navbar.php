@@ -22,7 +22,7 @@ $estConnecte = isset($_SESSION['utilisateur_id']); // Vérifie si l'utilisateur 
         <a href="home.php" class="logo">ShopTonMaillot</a>
 
         <div class="navbar-links">
-            <a href="collection.html" class="nav-link">Collection</a>
+            <a href="collection.php" class="nav-link">Collection</a>
 
             <!-- Mettre une annonce : redirection si pas connecté -->
             <a href="<?= $estConnecte ? 'annonce.php' : 'acces-refuse.html' ?>" class="nav-link">Mettre une annonce</a>
@@ -30,10 +30,10 @@ $estConnecte = isset($_SESSION['utilisateur_id']); // Vérifie si l'utilisateur 
             <div class="dropdown">
                 <a href="#" class="nav-link">Catégories <i class="fas fa-chevron-down"></i></a>
                 <div class="dropdown-content">
-                    <a href="category.html?cat=football">Football</a>
-                    <a href="category.html?cat=basketball">Basketball</a>
-                    <a href="category.html?cat=rugby">Rugby</a>
-                    <a href="category.html?cat=autres">Autres sports</a>
+                    <a href="category.php?cat=football">Football</a>
+                    <a href="category.php?cat=basketball">Basketball</a>
+                    <a href="category.php?cat=rugby">Rugby</a>
+                    <a href="category.php?cat=autres">Autres sports</a>
                 </div>
             </div>
 

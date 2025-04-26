@@ -1,3 +1,12 @@
+<?php
+// Connexion à la base de données
+try {
+    $pdo = new PDO('mysql:host=localhost;dbname=shoptonmaillot;charset=utf8', 'root', '');
+} catch (PDOException $e) {
+    die("Erreur de connexion : " . $e->getMessage());
+}
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -11,14 +20,14 @@
     <!-- Inclusion de la navbar -->
     <?php include 'navbar.php'; ?>
 
-   <!-- Hero Section -->
-<section class="hero">
-    <div class="hero-content">
-        <h1>Maillots Sportifs d'Exception</h1>
-        <p>Découvrez notre collection exclusive de maillots de sport authentiques et collector</p>
-        <a href="collection.html" class="btn">Explorer la collection</a>
-    </div>
-</section>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Maillots Sportifs d'Exception</h1>
+            <p>Découvrez notre collection exclusive de maillots de sport authentiques et collector</p>
+            <a href="collection.php" class="btn">Explorer la collection</a>
+        </div>
+    </section>
 
     <!-- Featured Products -->
     <section class="featured-products">
@@ -26,57 +35,42 @@
             <h2>Nos Produits Phares</h2>
             <p>Les maillots les plus recherchés du moment</p>
         </div>
-        
+
         <div class="products-grid">
-            <div class="product-card">
-                <div class="product-badge">Nouveau</div>
-                <img src="https://via.placeholder.com/300x300?text=Maillot+PSG+2023" alt="Maillot PSG 2023">
-                <div class="product-info">
-                    <h3>Maillot PSG Domicile 2023/24</h3>
-                    <div class="product-price">€89.99</div>
-                    <div class="product-actions">
-                        <button class="btn-add-to-cart">Ajouter au panier</button>
-                        <button class="btn-wishlist"><i class="far fa-heart"></i></button>
+            <?php
+            // Récupération des produits les plus ajoutés en favoris
+            $sql = "
+                SELECT a.*, p.chemin, COUNT(f.id_favoris) AS nb_favoris
+                FROM annonce a
+                LEFT JOIN (
+                    SELECT id_annonce, MIN(id_photo) AS min_id
+                    FROM photo
+                    GROUP BY id_annonce
+                ) first_photo ON a.id_annonce = first_photo.id_annonce
+                LEFT JOIN photo p ON p.id_photo = first_photo.min_id
+                LEFT JOIN favoris f ON a.id_annonce = f.id_annonce
+                GROUP BY a.id_annonce
+                ORDER BY nb_favoris DESC
+                LIMIT 4
+            ";
+
+            $stmt = $pdo->query($sql);
+
+            while ($annonce = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            ?>
+                <div class="product-card">
+                    <img src="<?= htmlspecialchars($annonce['chemin'] ?? 'https://via.placeholder.com/300x300?text=Sans+Image') ?>" alt="<?= htmlspecialchars($annonce['equipe']) ?>">
+                    <div class="product-info">
+                        <h3><?= htmlspecialchars($annonce['equipe']) ?> - <?= htmlspecialchars($annonce['type_maillot']) ?></h3>
+                        <div class="product-price">€<?= number_format($annonce['prix'], 2) ?></div>
+                        <p style="font-size: 0.9em; color: #888;">❤️ <?= $annonce['nb_favoris'] ?> ajout(s) aux favoris</p>
+                        <div class="product-actions">
+                            <button class="btn-add-to-cart">Ajouter au panier</button>
+                            <button class="btn-wishlist"><i class="far fa-heart"></i></button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="product-card">
-                <div class="product-badge">-20%</div>
-                <img src="https://via.placeholder.com/300x300?text=Maillot+France+2022" alt="Maillot France 2022">
-                <div class="product-info">
-                    <h3>Maillot France Équipe 2022</h3>
-                    <div class="product-price"><span class="old-price">€99.99</span> €79.99</div>
-                    <div class="product-actions">
-                        <button class="btn-add-to-cart">Ajouter au panier</button>
-                        <button class="btn-wishlist"><i class="far fa-heart"></i></button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="product-card">
-                <img src="https://via.placeholder.com/300x300?text=Maillot+Lakers" alt="Maillot Lakers">
-                <div class="product-info">
-                    <h3>Maillot Los Angeles Lakers</h3>
-                    <div class="product-price">€74.99</div>
-                    <div class="product-actions">
-                        <button class="btn-add-to-cart">Ajouter au panier</button>
-                        <button class="btn-wishlist"><i class="far fa-heart"></i></button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="product-card">
-                <img src="https://via.placeholder.com/300x300?text=Maillot+Barcelone" alt="Maillot Barcelone">
-                <div class="product-info">
-                    <h3>Maillot FC Barcelone 2023</h3>
-                    <div class="product-price">€84.99</div>
-                    <div class="product-actions">
-                        <button class="btn-add-to-cart">Ajouter au panier</button>
-                        <button class="btn-wishlist"><i class="far fa-heart"></i></button>
-                    </div>
-                </div>
-            </div>
+            <?php } ?>
         </div>
     </section>
 
@@ -86,30 +80,30 @@
             <h2>Parcourir par Catégorie</h2>
             <p>Trouvez le maillot parfait pour votre sport favori</p>
         </div>
-        
+
         <div class="categories-grid">
-            <a href="category.html?cat=football" class="category-card">
+            <a href="category.php?cat=football" class="category-card">
                 <div class="category-image">
                     <img src="maillot-real-madrid-2024-2025-exterieur-orange-1.jpg" alt="Football">
                 </div>
                 <h3>Football</h3>
             </a>
-            
-            <a href="category.html?cat=basketball" class="category-card">
+
+            <a href="category.php?cat=basketball" class="category-card">
                 <div class="category-image">
                     <img src="1200x680_ekpb8xhx0aa7hoy_1.jpg" alt="Basketball">
                 </div>
                 <h3>Basketball</h3>
             </a>
-            
-            <a href="category.html?cat=rugby" class="category-card">
+
+            <a href="category.php?cat=rugby" class="category-card">
                 <div class="category-image">
                     <img src="sportspaysbasque-c13f73232e1843d289b517e824896325-132259-ph0.jpg" alt="Rugby">
                 </div>
                 <h3>Rugby</h3>
             </a>
-            
-            <a href="category.html?cat=autres" class="category-card">
+
+            <a href="category.php?cat=autres" class="category-card">
                 <div class="category-image">
                     <img src="maillot-ext-2.jpg" alt="Autres Sports">
                 </div>
@@ -123,7 +117,7 @@
         <div class="section-header">
             <h2>Pourquoi Choisir ShopTonMaillot?</h2>
         </div>
-        
+
         <div class="features-grid">
             <div class="feature-card">
                 <div class="feature-icon">
@@ -132,7 +126,7 @@
                 <h3>Authenticité Garantie</h3>
                 <p>Tous nos maillots sont 100% authentiques avec certificat d'authenticité.</p>
             </div>
-            
+
             <div class="feature-card">
                 <div class="feature-icon">
                     <i class="fas fa-truck"></i>
@@ -140,7 +134,7 @@
                 <h3>Livraison Rapide</h3>
                 <p>Expédition sous 24h et livraison en 2-3 jours ouvrés.</p>
             </div>
-            
+
             <div class="feature-card">
                 <div class="feature-icon">
                     <i class="fas fa-exchange-alt"></i>
@@ -148,7 +142,7 @@
                 <h3>Retours Faciles</h3>
                 <p>Retours acceptés sous 30 jours sans frais.</p>
             </div>
-            
+
             <div class="feature-card">
                 <div class="feature-icon">
                     <i class="fas fa-headset"></i>
